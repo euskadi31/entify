@@ -1,0 +1,10 @@
+.DS_Store
+*.out
+
+vendor/
+
+*.swp
+
+build/
+
+entify/entity/*
