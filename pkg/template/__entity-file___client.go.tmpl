@@ -5,14 +5,16 @@ package {{.Package}}
 import "database/sql"
 
 type {{.Entity.StructName}}Client struct {
-	db    *sql.DB
-	table string
+	db      *sql.DB
+    dialect string
+	table   string
 }
 
-func new{{.Entity.StructName}}Client(db *sql.DB) *{{.Entity.StructName}}Client {
+func new{{.Entity.StructName}}Client(dialect string, db *sql.DB) *{{.Entity.StructName}}Client {
 	return &{{.Entity.StructName}}Client{
-		db:    db,
-		table: "{{.Entity.Name}}",
+        dialect: dialect,
+		db:      db,
+		table:   "{{.Entity.Name}}",
 	}
 }
 

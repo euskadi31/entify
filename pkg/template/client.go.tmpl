@@ -5,6 +5,8 @@ package {{.Package}}
 import (
     "database/sql"
     "errors"
+
+    entsql "entgo.io/ent/dialect/sql"
 )
 
 
@@ -31,19 +33,24 @@ func (i Op) Is(o Op) bool {
 
 //go:generate go run golang.org/x/tools/cmd/stringer -type Op
 
+// OrderFunc applies an ordering on the sql selector.
+type OrderFunc func(*entsql.Selector)
+
 type Client struct {
 	db *sql.DB
+    dialect string
 
     {{- range .Entities}}
     {{.StructName}} * {{.StructName}}Client
     {{- end}}
 }
 
-func NewClient(db *sql.DB) *Client {
+func NewClient(dialect string, db *sql.DB) *Client {
 	return &Client{
-		db:   db,
+		db:     db,
+        dialect: dialect,
         {{- range .Entities}}
-        {{.StructName}}: new{{.StructName}}Client(db),
+        {{.StructName}}: new{{.StructName}}Client(dialect, db),
         {{- end}}
 	}
 }

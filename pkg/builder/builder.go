@@ -223,14 +223,14 @@ func (b *Builder) generateClient() error {
 
 func (b *Builder) generateEntity(entity *types.Entity) error {
 	if err := b.render("__entity-package__/__entity-file__.go.tmpl", map[string]string{
-		"entity-package": TableNameToFileName(entity.StructName),
+		"entity-package": entity.PackageName,
 		"entity-file":    entity.Filename,
 	}, entity); err != nil {
 		return fmt.Errorf("generate entity file: %w", err)
 	}
 
 	if err := b.render("__entity-package__/where.go.tmpl", map[string]string{
-		"entity-package": TableNameToFileName(entity.StructName),
+		"entity-package": entity.PackageName,
 	}, entity); err != nil {
 		return fmt.Errorf("generate where file: %w", err)
 	}

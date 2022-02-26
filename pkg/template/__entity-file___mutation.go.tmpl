@@ -96,6 +96,27 @@ func ({{.Entity.ReceiverVarName}}m *{{.Entity.StructName}}Mutation) getColumnsAn
 	return {{.Entity.ReceiverVarName}}, columns, values
 }
 
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+/*
+func ({{.Entity.ReceiverVarName}}m *{{.Entity.StructName}}Mutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case {{.Entity.ReceiverVarName}}m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := {{.Entity.ReceiverVarName}}m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case {{.Entity.ReceiverVarName}}m.op.Is(OpUpdate | OpDelete):
+		return {{.Entity.ReceiverVarName}}m.client.Query().Where({{.Entity.ReceiverVarName}}m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", {{.Entity.ReceiverVarName}}m.op)
+	}
+}
+*/
 func ({{.Entity.ReceiverVarName}}m *{{.Entity.StructName}}Mutation) create(ctx context.Context) (*{{.Entity.StructName}}, error) {
 	{{.Entity.ReceiverVarName}}, columns, values := {{.Entity.ReceiverVarName}}m.getColumnsAndValuesMutated()
 
@@ -125,8 +146,6 @@ func ({{.Entity.ReceiverVarName}}m *{{.Entity.StructName}}Mutation) updateOne(ct
 
 	updateBuilder := sql.Update({{.Entity.ReceiverVarName}}m.client.table)
 
-	//updateBuilder := sq.Update({{.Entity.ReceiverVarName}}m.client.table)
-
 	for i, column := range columns {
 		v := values[i]
 		if v == nil {
@@ -138,7 +157,7 @@ func ({{.Entity.ReceiverVarName}}m *{{.Entity.StructName}}Mutation) updateOne(ct
 
 	query, args := updateBuilder.
         {{- range .Entity.PrimaryKeys}}
-        Where(sql.P().EQ({{$.Entity.PackageName}}.Field{{.PropertyName}}, {{$.Entity.ReceiverVarName}}m.previous.{{.VariableName}})).
+        Where(sql.EQ({{$.Entity.PackageName}}.Field{{.PropertyName}}, {{$.Entity.ReceiverVarName}}m.previous.{{.VariableName}})).
         {{- end}}
         Query()
 
@@ -150,8 +169,8 @@ func ({{.Entity.ReceiverVarName}}m *{{.Entity.StructName}}Mutation) updateOne(ct
 }
 
 func ({{.Entity.ReceiverVarName}}m *{{.Entity.StructName}}Mutation) update(ctx context.Context) (*{{.Entity.StructName}}, error) {
-	return nil, fmt.Errorf("not yet implemented")
-/*
+    return nil, fmt.Errorf("not yet implemented")
+	/*
     {{.Entity.ReceiverVarName}}, columns, values := {{.Entity.ReceiverVarName}}m.getColumnsAndValuesMutated()
 
 	updateBuilder := sql.Update({{.Entity.ReceiverVarName}}m.client.table)
@@ -165,22 +184,29 @@ func ({{.Entity.ReceiverVarName}}m *{{.Entity.StructName}}Mutation) update(ctx c
 		}
 	}
 
-	//@TODO: use {{.Entity.ReceiverVarName}}m.predicates for where
+// START WIP
+    ids, err := {{.Entity.ReceiverVarName}}m.IDs(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("select ids failed: %w", err)
+	}
 
-	query, args := updateBuilder.Where(sql.P().EQ({{.Entity.PackageName}}.FieldID, {{.Entity.ReceiverVarName}}m.previous.id)).Query()
+	updateBuilder.Where(sql.In({{.Entity.PackageName}}.FieldID, {{.Entity.PackageName}}.IDs(ids)))
+// END WIP
+
+	query, args := updateBuilder.Query()
 
 	if _, err := {{.Entity.ReceiverVarName}}m.client.db.ExecContext(ctx, query, args...); err != nil {
 		return nil, fmt.Errorf("update failed: %w", err)
 	}
 
 	return {{.Entity.ReceiverVarName}}, nil
-*/
+    */
 }
 
 func ({{.Entity.ReceiverVarName}}m *{{.Entity.StructName}}Mutation) deleteOne(ctx context.Context) error {
     query, args := sql.Delete({{.Entity.ReceiverVarName}}m.client.table).
         {{- range .Entity.PrimaryKeys}}
-        Where(sql.P().EQ({{$.Entity.PackageName}}.Field{{.PropertyName}}, {{$.Entity.ReceiverVarName}}m.previous.{{.VariableName}})).
+        Where(sql.EQ({{$.Entity.PackageName}}.Field{{.PropertyName}}, {{$.Entity.ReceiverVarName}}m.previous.{{.VariableName}})).
         {{- end}}
         Query()
 
@@ -194,7 +220,7 @@ func ({{.Entity.ReceiverVarName}}m *{{.Entity.StructName}}Mutation) deleteOne(ct
 func ({{.Entity.ReceiverVarName}}m *{{.Entity.StructName}}Mutation) delete(ctx context.Context) error {
     return fmt.Errorf("not yet implemented")
 /*
-	query, args := sql.Delete({{.Entity.ReceiverVarName}}m.client.table).Where(sql.P().EQ({{.Entity.PackageName}}.FieldID, {{.Entity.ReceiverVarName}}m.previous.id)).Query()
+	query, args := sql.Delete({{.Entity.ReceiverVarName}}m.client.table).Where(sql.EQ({{.Entity.PackageName}}.FieldID, {{.Entity.ReceiverVarName}}m.previous.id)).Query()
 
 	//@TODO: use {{.Entity.ReceiverVarName}}m.predicates for where
 

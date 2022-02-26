@@ -33,8 +33,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-go-
 
-    - name: Build
+    - name: Build race
       run: go build -race -v ./...
+
+    - name: Generate entity
+      run: make run
 
     - name: Test
       run: go test -race -cover -coverprofile ./coverage.out ./...

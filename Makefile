@@ -57,7 +57,7 @@ generate: $(GO_FILES)
 	@go generate ./...
 
 
-${BUILD_DIR}/entify: $(GO_FILES) go.mod
+${BUILD_DIR}/entify: _build $(GO_FILES) go.mod
 	@echo "Building $@..."
 	@go generate ./cmd/$(subst ${BUILD_DIR}/,,$@)/...
 	@go build -o $@ ./cmd/$(subst ${BUILD_DIR}/,,$@)/
