@@ -218,7 +218,7 @@ func (b *Builder) generatePredicate() error {
 }
 
 func (b *Builder) generateClient() error {
-	return b.render("client.go.tmpl", nil, nil)
+	return b.render("entify_client.go.tmpl", nil, nil)
 }
 
 func (b *Builder) generateEntity(entity *types.Entity) error {
