@@ -122,13 +122,12 @@ func ({{.Entity.ReceiverVarName}}m *{{.Entity.StructName}}Mutation) create(ctx c
 
 	query, args := sql.Insert({{.Entity.ReceiverVarName}}m.client.table).Columns(columns...).Values(values...).Query()
 
-	_, err := {{.Entity.ReceiverVarName}}m.client.db.ExecContext(ctx, query, args...)
+	{{if .Entity.PrimaryKeyAutoIncr }}result{{else}}_{{end}}, err := {{.Entity.ReceiverVarName}}m.client.db.ExecContext(ctx, query, args...)
 	if err != nil {
 		return nil, fmt.Errorf("insert failed: %w", err)
 	}
 
-
-    {{if .Entity.PrimaryKeyAutoIncr }}
+    {{- if .Entity.PrimaryKeyAutoIncr }}
     {{ $pk := (index .Entity.PrimaryKeys 0).VariableName }}
     {{ $pk }}, err := result.LastInsertId()
     if err != nil {
@@ -136,7 +135,7 @@ func ({{.Entity.ReceiverVarName}}m *{{.Entity.StructName}}Mutation) create(ctx c
     }
 
     {{.Entity.ReceiverVarName}}.{{ $pk }} = {{ $pk }}
-    {{end}}
+    {{- end}}
 
 	return {{.Entity.ReceiverVarName}}, nil
 }

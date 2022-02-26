@@ -206,6 +206,10 @@ func (b *Builder) render(name string, placeholders map[string]string, data inter
 		return fmt.Errorf("format %s source failed: %w", name, err)
 	}
 
+	//dev mode
+	// content := buf.Bytes()
+	//dev mode
+
 	if _, err := f.Write(content); err != nil {
 		return fmt.Errorf("write %s file failed: %w", dest, err)
 	}
@@ -218,7 +222,7 @@ func (b *Builder) generatePredicate() error {
 }
 
 func (b *Builder) generateClient() error {
-	return b.render("entify_client.go.tmpl", nil, nil)
+	return b.render("client.go.tmpl", nil, nil)
 }
 
 func (b *Builder) generateEntity(entity *types.Entity) error {

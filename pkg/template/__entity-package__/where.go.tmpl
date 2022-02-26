@@ -13,7 +13,7 @@ import (
 
 {{- range .Fields}}
 // {{.PropertyName}} filters vertices based on their {{.PropertyName}} field.
-func {{.PropertyName}}Old({{.VariableName}} {{.Type}}) predicate.{{$.StructName}} {
+func {{.PropertyName}}({{.VariableName}} {{.Type}}) predicate.{{$.StructName}} {
 	return predicate.{{$.StructName}}(func(s *entsql.Selector) {
 		s.Where(entsql.EQ(s.C(Field{{.PropertyName}}), {{.VariableName}}))
 	})

@@ -2,6 +2,7 @@
 package builder
 
 import (
+	"go/token"
 	"os"
 	"path"
 	"path/filepath"
@@ -101,7 +102,13 @@ func ColumnNameToVariableName(name string) string {
 
 	parts[0] = strings.ToLower(parts[0])
 
-	return strings.Join(parts, "")
+	vn := strings.Join(parts, "")
+
+	if token.Lookup(vn).IsKeyword() {
+		return vn[0:1]
+	}
+
+	return vn
 }
 
 func ColumnTypeToSQLType(colType *schema.ColumnType) (string, string, string) {

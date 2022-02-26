@@ -9,3 +9,4 @@ build/
 _dev/
 
 entify/entity/*
+dev.hcl
