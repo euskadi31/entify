@@ -6,5 +6,6 @@ vendor/
 *.swp
 
 build/
+_dev/
 
 entify/entity/*
