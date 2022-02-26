@@ -10,26 +10,64 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/cobra"
 )
 
-type EntityContext struct {
-	Package    string
-	Imports    []string
-	StructName string
-	Fields     []*EntityField
+var (
+	outputFlag   string
+	providerFlag string
+)
+
+var rootCmd = &cobra.Command{
+	Use:   "entify",
+	Short: "Entify is a entity generator",
+	RunE:  builderRun,
 }
 
-type EntityField struct {
-	PropertyName string
-	Name         string
-	Type         string
+func init() {
+	dest := path.Join(".", "entify", "entity")
+
+	rootCmd.PersistentFlags().StringVarP(&outputFlag, "out", "o", dest, "out directory (default is ./entify/entity)")
+	rootCmd.PersistentFlags().StringVarP(&providerFlag, "provider", "p", "", "out directory (mysql, postgres)")
+}
+
+func builderRun(cmd *cobra.Command, args []string) error {
+	if len(args) == 0 {
+		return cmd.Usage()
+	}
+
+	filename := args[0]
+
+	loader := spec.New()
+
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		log.Error().Err(err).Msg("")
+	}
+
+	data, err := loader.ParseFile(providerFlag, filename)
+	if err != nil {
+		log.Error().Err(err).Msg("open spec file failed")
+
+		os.Exit(1)
+	}
+
+	dest := outputFlag
+
+	if err := builder.New(data, dest).Build(); err != nil {
+		log.Error().Err(err).Msg("generate entity files failed")
+
+		os.Exit(1)
+	}
+
+	log.Info().Msg("done")
+
+	return nil
 }
 
 func main() {
 	logger := zerolog.New(os.Stdout).With().
 		Timestamp().
 		Stack().
-		// Caller().
 		Logger()
 
 	logger = logger.Output(zerolog.ConsoleWriter{Out: os.Stderr})
@@ -39,24 +77,9 @@ func main() {
 
 	log.Logger = logger
 
-	//@TODO: use option --out for config this
-	dest := path.Join(".", "entify", "entity")
-
-	loader := spec.New()
-
-	//@TODO: use option --provider for config this and check if args[1] is not empty and file readable
-	data, err := loader.ParseFile("mysql", os.Args[1])
-	if err != nil {
-		log.Error().Err(err).Msg("open spec file failed")
+	if err := rootCmd.Execute(); err != nil {
+		log.Error().Err(err).Msg("")
 
 		os.Exit(1)
 	}
-
-	if err := builder.New(data, dest).Build(); err != nil {
-		log.Error().Err(err).Msg("generate entity files failed")
-
-		os.Exit(1)
-	}
-
-	log.Info().Msg("done")
 }
