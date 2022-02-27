@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"ariga.io/atlas/sql/schema"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/euskadi31/entify/pkg/types"
 	"github.com/iancoleman/strcase"
 )
@@ -270,6 +271,19 @@ func ColumnTypeToType(colType *schema.ColumnType) *ColumnType {
 			NullablePackage:        pkgDatabaseSQL,
 			NullableSQLAccessValue: "Time",
 		}
+	case *schema.JSONType:
+		return &ColumnType{
+			Type:                   "json.RawMessage",
+			TypeKind:               types.FieldTypeKindJson,
+			SQLType:                "string",
+			DefaultValue:           `json.RawMessage{}`,
+			NullableSQLType:        "sql.NullString",
+			Package:                "encoding/json",
+			NullablePackage:        pkgDatabaseSQL,
+			NullableSQLAccessValue: "String",
+		}
+	default:
+		spew.Dump(t)
 	}
 
 	return nil

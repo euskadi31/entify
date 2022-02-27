@@ -65,7 +65,11 @@ ${BUILD_DIR}/entify: _build $(GO_FILES) go.mod
 .PHONY: run-entify
 run-entify: ${BUILD_DIR}/entify
 	@echo "Running $<..."
-	@#./$< --provider mysql demo/atlas.hcl
-	@./$< --provider mysql dev.hcl
+	@./$< --provider mysql demo/atlas.hcl
+
+.PHONY: run-entify-dev
+run-entify-dev: ${BUILD_DIR}/entify
+	@echo "Running $<..."
+	@./run-entify --provider mysql dev.hcl
 
 run: run-entify

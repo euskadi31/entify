@@ -28,6 +28,7 @@ const (
 	FieldTypeKindString
 	FieldTypeKindBool
 	FieldTypeKindDate
+	FieldTypeKindJson
 )
 
 type Field struct {
