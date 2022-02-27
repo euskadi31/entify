@@ -314,6 +314,43 @@ func findModuleRoot(dir string) (root string) {
 	return ""
 }
 
+func reverseSlice(s []string) []string {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+
+	return s
+}
+
+func findCurrentModulePath(dir string) (root string) {
+	if dir == "" {
+		panic("dir not set")
+	}
+
+	dir = filepath.Clean(dir)
+
+	parts := []string{}
+
+	// Look for enclosing go.mod.
+	for {
+		if fi, err := os.Stat(filepath.Join(dir, "go.mod")); err == nil && !fi.IsDir() {
+			return path.Join(reverseSlice(parts)...)
+		}
+
+		d := filepath.Dir(dir)
+
+		if d == dir {
+			break
+		}
+
+		parts = append(parts, path.Base(dir))
+
+		dir = d
+	}
+
+	return path.Join(reverseSlice(parts)...)
+}
+
 //nolint:wrapcheck
 func readModFile(dir string) ([]byte, error) {
 	return os.ReadFile(path.Join(dir, "go.mod"))

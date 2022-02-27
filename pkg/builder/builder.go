@@ -94,6 +94,19 @@ func (b *Builder) processSpec() {
 		panic(err)
 	}
 
+	module := modfile.ModulePath(mod)
+
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Error().Err(err).Msg("get working dir failed")
+
+		return
+	}
+
+	m := findCurrentModulePath(wd)
+
+	module = path.Join(module, m, b.dest)
+
 	for _, t := range b.spec.Tables {
 		importsMap := map[string]struct{}{}
 		imports := []string{}
@@ -143,10 +156,6 @@ func (b *Builder) processSpec() {
 			// @TODO: check if auto_increment is set
 			autoIncr = true
 		}
-
-		module := modfile.ModulePath(mod)
-
-		module = path.Join(module, b.dest)
 
 		b.data.Entities = append(b.data.Entities, &types.Entity{
 			ReceiverVarName:    TableNameToReceiver(t.Name),
