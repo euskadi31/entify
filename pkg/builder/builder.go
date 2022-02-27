@@ -144,9 +144,13 @@ func (b *Builder) processSpec() {
 			autoIncr = true
 		}
 
+		module := modfile.ModulePath(mod)
+
+		module = path.Join(module, b.dest)
+
 		b.data.Entities = append(b.data.Entities, &types.Entity{
 			ReceiverVarName:    TableNameToReceiver(t.Name),
-			Module:             modfile.ModulePath(mod),
+			Module:             module,
 			Name:               t.Name,
 			VariableName:       TableNameToVariableName(t.Name),
 			Filename:           TableNameToFileName(t.Name),

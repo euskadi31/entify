@@ -70,6 +70,6 @@ run-entify: ${BUILD_DIR}/entify
 .PHONY: run-entify-dev
 run-entify-dev: ${BUILD_DIR}/entify
 	@echo "Running $<..."
-	@./run-entify --provider mysql dev.hcl
+	@./${BUILD_DIR}/entify --provider mysql dev.hcl
 
 run: run-entify

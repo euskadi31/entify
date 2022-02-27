@@ -11,8 +11,8 @@ import (
     {{- end}}
 
 	"entgo.io/ent/dialect/sql"
-	"{{.Module}}/entify/entity/predicate"
-	"{{.Module}}/entify/entity/{{.Entity.PackageName}}"
+	"{{.Module}}/predicate"
+	"{{.Module}}/{{.Entity.PackageName}}"
 )
 
 func new{{.Entity.StructName}}Mutation(client *{{.Entity.StructName}}Client, op Op, opts ...{{.Entity.StructName}}Option) *{{.Entity.StructName}}Mutation {
