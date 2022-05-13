@@ -4,10 +4,9 @@ go 1.16
 
 require (
 	ariga.io/atlas v0.3.6
-	entgo.io/ent v0.10.0
 	github.com/DATA-DOG/go-sqlmock v1.5.0
-	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/gertd/go-pluralize v0.2.0
+	github.com/davecgh/go-spew v1.1.1
+	github.com/gertd/go-pluralize v0.2.1
 	github.com/iancoleman/strcase v0.2.0
 	github.com/rs/zerolog v1.26.1
 	github.com/spf13/cobra v1.3.0
