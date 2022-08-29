@@ -3,7 +3,7 @@ module github.com/euskadi31/entify
 go 1.16
 
 require (
-	ariga.io/atlas v0.3.6
+	ariga.io/atlas v0.6.3
 	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/gertd/go-pluralize v0.2.0
