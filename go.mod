@@ -6,7 +6,7 @@ require (
 	ariga.io/atlas v0.3.6
 	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/davecgh/go-spew v1.1.1
-	github.com/gertd/go-pluralize v0.2.0
+	github.com/gertd/go-pluralize v0.2.1
 	github.com/iancoleman/strcase v0.2.0
 	github.com/rs/zerolog v1.28.0
 	github.com/spf13/cobra v1.3.0
