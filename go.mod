@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	ariga.io/atlas v0.15.0
-	github.com/DATA-DOG/go-sqlmock v1.5.0
+	github.com/DATA-DOG/go-sqlmock v1.5.1
 	github.com/davecgh/go-spew v1.1.1
 	github.com/gertd/go-pluralize v0.2.1
 	github.com/iancoleman/strcase v0.3.0
