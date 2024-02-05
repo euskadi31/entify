@@ -9,7 +9,7 @@ require (
 	github.com/gertd/go-pluralize v0.2.1
 	github.com/iancoleman/strcase v0.3.0
 	github.com/kr/pretty v0.2.0 // indirect
-	github.com/rs/zerolog v1.31.0
+	github.com/rs/zerolog v1.32.0
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/mod v0.14.0
