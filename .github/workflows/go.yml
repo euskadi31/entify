@@ -153,7 +153,7 @@ jobs:
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.55.2
+          version: latest
           skip-pkg-cache: true
           skip-go-installation: true
           working-directory: ./
